@@ -14,6 +14,7 @@ import org.apache.parquet.schema.*;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,6 +87,7 @@ public class ReadWriteParquet {
             reader = ParquetReader.builder(groupReadSupport, path).build();
             Group group = null;
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             while ((group = reader.read()) != null) {
                 System.out.print(group);
                 long starttime = ParquetTimestampUtils.getTimestampMillis(group.getInt96("starttime", 0));
@@ -108,7 +110,7 @@ public class ReadWriteParquet {
     public static void main(String[] args) throws Exception {
         System.setProperty("HADOOP_USER_NAME", "rapids");
         //writeParquetToHDFS("had1","9000","/tmp/parquettest","test1.parq");
-        //readParquetFromHDFS("flow0", "8020", "/zhouhc/hadoop_citibike_parquet_application", "part-ce85627e-34b7-4bf0-9442-2c9d9149b9e1-0");
+        readParquetFromHDFS("flow0", "8020", "/zhouhc/hadoop_citibike_parquet_application", "part-ee614574-c612-47d3-8307-8d132d394c34-0");
     }
 
 
