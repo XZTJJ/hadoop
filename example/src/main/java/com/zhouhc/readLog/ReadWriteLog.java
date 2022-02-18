@@ -25,7 +25,7 @@ import java.util.*;
 import java.util.concurrent.*;
 
 
-//读写日志
+//从hdfs上读取日志，并且转成Json，通过http post的方式写入es中。
 public class ReadWriteLog {
     //全局变量的初始化
     private static final GrokCompiler GROKCOMPILER = GrokCompiler.newInstance();
@@ -164,7 +164,7 @@ public class ReadWriteLog {
         Map<String, Object> dateMap = match.capture();
         //处理信息
         dateTempMap.add(dateMap);
-        if (dateMap.size() > 50 || isFlush) {
+        if (dateTempMap.size() > 50 || isFlush) {
             exec.submit(new MyIndexEsTasking(new ArrayList<Map<String, Object>>(dateTempMap), configPO.esHost, configPO.esPort,
                     configPO.esIndex, configPO.applicationId, configPO.jobName, configPO.username));
             dateTempMap.clear();
